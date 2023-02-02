@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import { UserService } from './user.services';
 import { CreateUserDto, UpdatePasswordDto, User } from 'src/utils/DB/entities/DBUsers';
 import { validate } from 'uuid';

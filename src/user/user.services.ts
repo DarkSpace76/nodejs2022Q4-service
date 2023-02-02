@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db.service';
 import { CreateUserDto, UpdatePasswordDto, User } from 'src/utils/DB/entities/DBUsers';
 
