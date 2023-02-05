@@ -24,4 +24,14 @@ export default class DBTrack extends DBEntity<
     this.entities.push(created);
     return created;
   }
+  async deleteArtist(artistId: string) {
+    this.entities.forEach((track) => {
+      if (track.artistId === artistId) track.artistId = null;
+    });
+  }
+  async deleteAlbum(albumId: string) {
+    this.entities.forEach((track) => {
+      if (track.albumId === albumId) track.albumId = null;
+    });
+  }
 }

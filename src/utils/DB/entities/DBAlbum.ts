@@ -23,4 +23,9 @@ export default class DBAlbum extends DBEntity<
     this.entities.push(created);
     return created;
   }
+  async deleteArtist(artistId: string) {
+    this.entities.forEach((album) => {
+      if (album.artistId === artistId) album.artistId = null;
+    });
+  }
 }
