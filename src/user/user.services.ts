@@ -1,33 +1,33 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db.service';
+import { AppServiceExtends } from 'src/service.extends';
 import { CreateUserDto, UpdatePasswordDto, User } from 'src/utils/DB/entities/DBUsers';
 
 
 @Injectable()
-export class UserService {
-
-    constructor(private database: DbService) { }
-
-
-    async getAllUser(): Promise<User[]> {
-        return await this.database.users.getAll();
+export class UserService extends AppServiceExtends<User, CreateUserDto, UpdatePasswordDto> {
+    constructor(private database: DbService) {
+        super();
     }
 
+    async getAll(): Promise<User[]> {
+        return this.database.users.getAll();
+    }
     async getById(id: string): Promise<User> {
-        return await this.database.users.findById(id);
+        return this.database.users.findById(id);
     }
-
-    async createUser(dto: CreateUserDto): Promise<User> {
+    async create(dto: CreateUserDto): Promise<User> {
         return this.database.users.create(dto);
     }
-
-    async updateUser(id: string, dto: UpdatePasswordDto): Promise<User> {
+    async update(id: string, dto: UpdatePasswordDto): Promise<User> {
         return this.database.users.update(id, dto);
     }
-
-    async deleteUser(id: string): Promise<User> {
+    async delete(id: string): Promise<User> {
         return this.database.users.delete(id);
     }
+
+
+
 
 }
