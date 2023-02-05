@@ -23,7 +23,12 @@ export class AlbumService extends AppServiceExtends<Album, CreateAlbumDTO, Chang
         return this.database.albums.change(id, dto);
     }
     async delete(id: string): Promise<Album> {
-        return this.database.albums.delete(id);
+        const album = await this.database.albums.delete(id);
+        if (album) {
+            await this.database.tracks.deleteAlbum(album.id);
+            await this.database.favorites.deleteAlbum(album.id);
+        }
+        return album;
     }
 
 }
