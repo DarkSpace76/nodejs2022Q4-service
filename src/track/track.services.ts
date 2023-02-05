@@ -11,20 +11,25 @@ export class TrackService extends AppServiceExtends<Track, CreateTrackDTO, Chang
     constructor(private database: DbService) {
         super();
     }
+
     async getAll(): Promise<Track[]> {
-        return this.database.traks.getAll();
+        return this.database.tracks.getAll();
     }
     async getById(id: string): Promise<Track> {
-        return this.database.traks.findById(id);
+        return this.database.tracks.findById(id);
     }
     async create(dto: CreateTrackDTO): Promise<Track> {
-        return this.database.traks.create(dto);
+        return this.database.tracks.create(dto);
     }
     async update(id: string, dto: Partial<Omit<Track, 'id'>>): Promise<Track> {
-        return this.database.traks.change(id, dto);
+        return this.database.tracks.change(id, dto);
     }
     async delete(id: string): Promise<Track> {
-        return this.database.traks.delete(id);
+        const track = await this.database.tracks.delete(id);
+        if (track)
+            await this.database.favorites.deleteTrack(track.id);
+
+        return track;
     }
 
 
