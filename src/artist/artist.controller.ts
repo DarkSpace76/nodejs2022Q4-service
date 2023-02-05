@@ -40,18 +40,10 @@ export class ArtistController {
     async update(@Param('id') id: string, @Body() body: ChangeArtistDTO): Promise<Artist> {
 
         if (!validate(id)) {
-            console.log(400);
             throw new HttpException('artist id not validate', HttpStatus.BAD_REQUEST);
         }
-        console.log(`
-        name exist ${body.name},
-        grammy exi ${body.grammy},
-        type name ${typeof body.name},
-        type gram ${typeof body.grammy}
-        `);
 
         if ((typeof body.grammy !== 'boolean' && typeof body.name !== 'string')) {
-            console.log(400);
             throw new HttpException('body does not contain required fields', HttpStatus.BAD_REQUEST);
         }
 

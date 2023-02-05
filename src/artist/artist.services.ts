@@ -32,7 +32,19 @@ export class ArtistService extends AppServiceExtends<Artist, CreateArtistDTO, Ch
         return this.database.artists.change(id, dto);
     }
     async delete(id: string): Promise<Artist> {
-        return this.database.artists.delete(id);
+        const artist = await this.database.artists.delete(id);
+        console.log(artist);
+
+        if (artist) {
+            await this.database.tracks.deleteArtist(artist.id);
+            console.log('delete track artist ');
+
+            await this.database.albums.deleteArtist(artist.id);
+            console.log('delete album artist ');
+            await this.database.favorites.deleteArtist(artist.id);
+            console.log('delete favs artist ');
+        }
+        return artist;
     }
 
 
