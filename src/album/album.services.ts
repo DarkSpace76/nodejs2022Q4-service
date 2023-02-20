@@ -2,7 +2,9 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db.service';
 import { AppServiceExtends } from 'src/service.extends';
-import { Album, ChangeAlbumDTO, CreateAlbumDTO } from 'src/utils/DB/entities/DBAlbum';
+import { ChangeAlbumDTO, CreateAlbumDTO } from 'src/utils/DB/entities/DBAlbum';
+import { FavType } from 'src/utils/DB/entities/DBFavorites';
+import { Album } from 'src/utils/typeorm/entity/Album';
 
 @Injectable()
 export class AlbumService extends AppServiceExtends<Album, CreateAlbumDTO, ChangeAlbumDTO>{
@@ -23,12 +25,14 @@ export class AlbumService extends AppServiceExtends<Album, CreateAlbumDTO, Chang
         return this.database.albums.change(id, dto);
     }
     async delete(id: string): Promise<Album> {
-        const album = await this.database.albums.delete(id);
-        if (album) {
-            await this.database.tracks.deleteAlbum(album.id);
-            await this.database.favorites.deleteAlbum(album.id);
+        const deleteAlbum = await this.database.albums.findById(id);
+
+        if (deleteAlbum) {
+            await this.database.albums.delete(deleteAlbum.id);
+            await this.database.tracks.deleteAlbum(deleteAlbum.id);
+            await this.database.favorites.delete(deleteAlbum.id, FavType.album);
         }
-        return album;
+        return deleteAlbum;
     }
 
 }

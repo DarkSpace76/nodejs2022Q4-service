@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Delete, Get, HttpStatus, HttpCode, Post, Put, Param, HttpException, Body } from '@nestjs/common';
 import { AlbumService } from './album.services';
-import { Album, ChangeAlbumDTO, CreateAlbumDTO } from 'src/utils/DB/entities/DBAlbum';
+import { ChangeAlbumDTO, CreateAlbumDTO } from 'src/utils/DB/entities/DBAlbum';
 import { validate } from 'uuid';
+import { Album } from 'src/utils/typeorm/entity/Album';
 
 @Controller('album')
 export class AlbumController {
