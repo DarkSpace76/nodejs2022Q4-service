@@ -1,5 +1,61 @@
 # Home Library Service
 
+To launch an application docker + nest + postgresDb
+
+Rename `.env.example` file to `.env`
+
+```
+docker-compose build
+```
+
+next step
+
+```
+docker-compose up
+```
+
+To stop an application
+
+```
+docker-compose stop
+```
+
+View built containers
+
+```
+docker images
+```
+
+View built images
+
+```
+docker images
+```
+
+View running containers
+
+```
+docker ps
+```
+
+View all containers
+
+```
+docker ps
+```
+
+Deleting an image
+
+```
+docker rmi <id_image>
+```
+
+Deleting an containers
+
+```
+docker rm <id_image>
+```
+
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
