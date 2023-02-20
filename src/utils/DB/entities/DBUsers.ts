@@ -1,19 +1,14 @@
+/* eslint-disable prettier/prettier */
 import * as crypto from 'node:crypto';
 
 import { Exclude } from 'class-transformer';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import DBEntity from './DBEntity';
+import { AppDataSource } from 'src/utils/typeorm/data-source';
+import { User as UserEntity } from 'src/utils/typeorm/entity/User';
 
-export interface User {
-  id: string; // uuid v4
-  login: string;
-  password: string;
-  version: number; // integer number, increments on update
-  createdAt: number; // timestamp of creation
-  updatedAt: number; // timestamp of last update
-}
 
-export class UserEntity {
+export class UserDto {
   id: string; // uuid v4
   login: string;
   version: number; // integer number, increments on update
@@ -23,7 +18,7 @@ export class UserEntity {
   @Exclude()
   password: string;
 
-  constructor(partial: Partial<UserEntity>) {
+  constructor(partial: Partial<UserDto>) {
     Object.assign(this, partial);
   }
 }
@@ -39,35 +34,38 @@ export interface UpdatePasswordDto {
 }
 
 //type CreateUsersDto = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'version'>;
-type ChangeUserDTO = Partial<Omit<User, 'id'>>;
+type ChangeUserDTO = Partial<Omit<UserEntity, 'id'>>;
 
 export default class DBUsers extends DBEntity<
-  User,
+  UserEntity,
   ChangeUserDTO,
   CreateUserDto
 > {
   async create(dto: CreateUserDto) {
-    const created: User = {
+    const created: UserEntity = {
       ...dto,
       createdAt: Date.now(),
       updatedAt: Date.now(),
       version: 1,
       id: crypto.randomUUID(),
     };
-    this.entities.push(created);
-    return created;
+    const newUser = await AppDataSource.getRepository(UserEntity).save(created);
+    return newUser;
   }
 
   async update(id: string, dto: UpdatePasswordDto) {
-    const idx = this.entities.findIndex((entity) => entity.id === id);
-    if (idx === -1) return null;
-    const changed = this.entities[idx];
-    if (changed.password !== dto.oldPassword)
+    const obj = await this.entities.findOne({
+      where: { id: id }
+    });
+    if (!obj) return null;
+
+
+    if (obj.password !== dto.oldPassword)
       throw new HttpException('Password mismatch', HttpStatus.FORBIDDEN);
-    changed.password = dto.newPassword;
-    changed.updatedAt = Date.now();
-    changed.version += 1;
-    this.entities.splice(idx, 1, changed);
-    return changed;
+    obj.password = dto.newPassword;
+    obj.updatedAt = Date.now();
+    obj.version += 1;
+    await this.entities.update({ id }, { ...obj });
+    return obj;
   }
 }

@@ -2,7 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db.service';
 import { AppServiceExtends } from 'src/service.extends';
-import { CreateUserDto, UpdatePasswordDto, User } from 'src/utils/DB/entities/DBUsers';
+import { CreateUserDto, UpdatePasswordDto } from 'src/utils/DB/entities/DBUsers';
+import { User } from 'src/utils/typeorm/entity/User';
 
 
 @Injectable()
