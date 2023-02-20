@@ -33,6 +33,7 @@ export class FavoritesController {
     async addAlbum(@Param('id') id: string): Promise<void> {
         const fHelper = await this.favoriteService.addAlbum(id);
         if (fHelper) throw new HttpException(fHelper.message, fHelper.code);
+
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
