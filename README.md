@@ -19,6 +19,7 @@ To stop an application
 ```
 docker-compose stop
 ```
+_________________________________________________________________
 
 View built containers
 
