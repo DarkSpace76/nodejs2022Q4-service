@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Put, Delete, HttpCode, Param, HttpException, HttpStatus, Body } from '@nestjs/common';
 import { TrackService } from './track.services';
-import { ChangeTrackDTO, CreateTrackDTO, Track } from 'src/utils/DB/entities/DBTrack';
+import { ChangeTrackDTO, CreateTrackDTO } from 'src/utils/DB/entities/DBTrack';
 import { validate } from 'uuid';
+import { Track } from 'src/utils/typeorm/entity/Track';
 
 @Controller('track')
 export class TrackController {
