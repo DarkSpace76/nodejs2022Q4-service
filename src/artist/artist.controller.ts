@@ -1,20 +1,23 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Delete, Get, HttpStatus, HttpCode, Post, Put, Param, HttpException, Body } from '@nestjs/common';
+import { Controller, Delete, Get, HttpStatus, HttpCode, Post, Put, Param, HttpException, Body, UseGuards } from '@nestjs/common';
 import { Artist, ArtistService } from './artist.services';
 import { validate } from 'uuid';
 import { ChangeArtistDTO, CreateArtistDTO } from 'src/utils/DB/entities/DBArtist';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
 
 @Controller('artist')
 export class ArtistController {
     constructor(private readonly artistService: ArtistService) { }
 
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Get()
     async getAll(): Promise<Artist[]> {
         return await this.artistService.getAll();
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Get(':id')
     async getById(@Param('id') id: string): Promise<Artist> {
@@ -26,6 +29,7 @@ export class ArtistController {
         return track;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.CREATED)
     @Post()
     async create(@Body() body: CreateArtistDTO): Promise<Artist> {
@@ -35,6 +39,7 @@ export class ArtistController {
         return artist;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Put(':id')
     async update(@Param('id') id: string, @Body() body: ChangeArtistDTO): Promise<Artist> {
@@ -54,6 +59,7 @@ export class ArtistController {
         return updateArtist;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<Artist> {

@@ -1,21 +1,24 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Delete, Get, HttpStatus, HttpCode, Post, Put, Param, HttpException, Body } from '@nestjs/common';
+import { Controller, Delete, Get, HttpStatus, HttpCode, Post, Put, Param, HttpException, Body, UseGuards } from '@nestjs/common';
 import { AlbumService } from './album.services';
 import { ChangeAlbumDTO, CreateAlbumDTO } from 'src/utils/DB/entities/DBAlbum';
 import { validate } from 'uuid';
 import { Album } from 'src/utils/typeorm/entity/Album';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
 
 @Controller('album')
 export class AlbumController {
     constructor(private readonly albumService: AlbumService) { }
 
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Get()
     async getAll(): Promise<Album[]> {
         return await this.albumService.getAll();
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Get(':id')
     async getById(@Param('id') id: string): Promise<Album> {
@@ -27,6 +30,7 @@ export class AlbumController {
         return album;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.CREATED)
     @Post()
     async create(@Body() body: CreateAlbumDTO): Promise<Album> {
@@ -36,6 +40,7 @@ export class AlbumController {
         return album;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Put(':id')
     async update(@Param('id') id: string, @Body() body: ChangeAlbumDTO): Promise<Album> {
@@ -54,6 +59,7 @@ export class AlbumController {
         return updateAlbum;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<Album> {

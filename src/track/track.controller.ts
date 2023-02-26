@@ -1,20 +1,23 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Put, Delete, HttpCode, Param, HttpException, HttpStatus, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, HttpCode, Param, HttpException, HttpStatus, Body, UseGuards } from '@nestjs/common';
 import { TrackService } from './track.services';
 import { ChangeTrackDTO, CreateTrackDTO } from 'src/utils/DB/entities/DBTrack';
 import { validate } from 'uuid';
 import { Track } from 'src/utils/typeorm/entity/Track';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
 
 @Controller('track')
 export class TrackController {
     constructor(private readonly trackService: TrackService) { }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Get()
     async getAll(): Promise<Track[]> {
         return await this.trackService.getAll();
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Get(':id')
     async getById(@Param('id') id: string): Promise<Track> {
@@ -26,6 +29,7 @@ export class TrackController {
         return track;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.CREATED)
     @Post()
     async create(@Body() body: CreateTrackDTO): Promise<Track> {
@@ -35,6 +39,7 @@ export class TrackController {
         return track;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Put(':id')
     async update(@Param('id') id: string, @Body() body: ChangeTrackDTO): Promise<Track> {
@@ -50,6 +55,7 @@ export class TrackController {
         return updateTrack;
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<Track> {

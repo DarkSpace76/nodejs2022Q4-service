@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.services';
 import { CreateUserDto, UpdatePasswordDto, UserDto } from 'src/utils/DB/entities/DBUsers';
 import { validate } from 'uuid';
+import { JwtAuthGuard } from 'src/auth/strategies/jwt-auth.guard';
 
 
 @Controller('user')
@@ -11,6 +12,7 @@ export class UserController {
 
     }
 
+    @UseGuards(JwtAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @HttpCode(200)
     @Get()
@@ -18,6 +20,7 @@ export class UserController {
         return (await this.userService.getAll()).map(user => new UserDto(user));
     }
 
+    @UseGuards(JwtAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @HttpCode(200)
     @Get(':id')
@@ -30,6 +33,7 @@ export class UserController {
         return new UserDto(user);
     }
 
+    @UseGuards(JwtAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @HttpCode(201)
     @Post()
@@ -40,6 +44,7 @@ export class UserController {
         return new UserDto(user);
     }
 
+    @UseGuards(JwtAuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @HttpCode(200)
     @Put(':id')
@@ -54,6 +59,7 @@ export class UserController {
         return new UserDto(updateUser);
     }
 
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
     @Delete(':id')
     async deleteUser(@Param('id') id: string): Promise<UserDto> {

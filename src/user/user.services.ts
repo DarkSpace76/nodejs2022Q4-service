@@ -18,6 +18,9 @@ export class UserService extends AppServiceExtends<User, CreateUserDto, UpdatePa
     async getById(id: string): Promise<User> {
         return this.database.users.findById(id);
     }
+    async getByName(id: string): Promise<User> {
+        return this.database.users.findByName(id);
+    }
     async create(dto: CreateUserDto): Promise<User> {
         return this.database.users.create(dto);
     }
