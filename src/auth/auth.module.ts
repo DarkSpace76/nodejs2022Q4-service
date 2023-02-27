@@ -9,6 +9,7 @@ import { DbModule } from 'src/db.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt.refresh.strategy';
+import { MyLogger } from 'src/loger/my.loger.service';
 
 @Module({
     imports: [DbModule, PassportModule, JwtModule.register({
@@ -16,6 +17,6 @@ import { JwtRefreshStrategy } from './strategies/jwt.refresh.strategy';
         signOptions: { expiresIn: '1d' },
     })],
     controllers: [AuthController],
-    providers: [AuthService, UserService, LocalStrategy, JwtStrategy, JwtRefreshStrategy]
+    providers: [MyLogger, AuthService, UserService, LocalStrategy, JwtStrategy, JwtRefreshStrategy]
 })
 export class AuthModule { }

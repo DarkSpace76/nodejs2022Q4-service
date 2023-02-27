@@ -1,14 +1,17 @@
 /* eslint-disable prettier/prettier */
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.services';
 import { CreateUserDto } from 'src/utils/DB/entities/DBUsers';
 import { JwtService } from '@nestjs/jwt';
+import { MyLogger } from 'src/loger/my.loger.service';
+import { MyBadRequestException } from 'src/loger/bad.request.except';
 
 @Injectable()
 export class AuthService {
     constructor(
         private usersService: UserService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private myLogger: MyLogger
     ) { }
 
 
@@ -18,7 +21,7 @@ export class AuthService {
             createUserDto.login,
         );
         if (userExists) {
-            throw new BadRequestException('User already exists');
+            throw new MyBadRequestException('User already exists', this.myLogger);
         }
 
         const newUser = await this.usersService.create(createUserDto);

@@ -1,0 +1,10 @@
+/* eslint-disable prettier/prettier */
+import { Module } from '@nestjs/common';
+import { MyLogger } from './my.loger.service';
+
+
+@Module({
+    providers: [MyLogger],
+    exports: [MyLogger],
+})
+export class LoggerModule { }
