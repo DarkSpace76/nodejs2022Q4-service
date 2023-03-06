@@ -1,0 +1,27 @@
+version: "2"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - $PORT:$PORT
+    depends_on:
+      - db
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=$POSTGRES_PORT
+      - DATABASE_USER=$POSTGRES_USER
+      - DATABASE_PASSWORD=$POSTGRES_PASSWORD
+      - DATABASE=$POSTGRES_DB
+  db:
+    image: postgres:14-alpine3.17
+    environment:
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    restart: always
+    ports:
+      - $POSTGRES_PORT:$POSTGRES_PORT
