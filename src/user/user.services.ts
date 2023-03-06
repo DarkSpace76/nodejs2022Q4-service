@@ -2,7 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db.service';
 import { AppServiceExtends } from 'src/service.extends';
-import { CreateUserDto, UpdatePasswordDto, User } from 'src/utils/DB/entities/DBUsers';
+import { CreateUserDto, UpdatePasswordDto } from 'src/utils/DB/entities/DBUsers';
+import { User } from 'src/utils/typeorm/entity/User';
 
 
 @Injectable()
@@ -16,6 +17,9 @@ export class UserService extends AppServiceExtends<User, CreateUserDto, UpdatePa
     }
     async getById(id: string): Promise<User> {
         return this.database.users.findById(id);
+    }
+    async getByName(id: string): Promise<User> {
+        return this.database.users.findByName(id);
     }
     async create(dto: CreateUserDto): Promise<User> {
         return this.database.users.create(dto);

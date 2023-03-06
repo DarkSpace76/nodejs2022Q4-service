@@ -13,10 +13,13 @@ import { ArtistService } from './artist/artist.services';
 import { FavoritesService } from './favorites/favorites.services';
 import { TrackService } from './track/track.services';
 import { DbModule } from './db.module';
+import { AuthModule } from './auth/auth.module';
+import { MyLogger } from './loger/my.loger.service';
+
 
 @Module({
-  imports: [DbModule],
+  imports: [DbModule, AuthModule],
   controllers: [AppController, UserController, AlbumController, ArtistController, FavoritesController, TrackController],
-  providers: [AppService, UserService, AlbumService, ArtistService, FavoritesService, TrackService],
+  providers: [MyLogger, AppService, UserService, AlbumService, ArtistService, FavoritesService, TrackService],
 })
 export class AppModule { }

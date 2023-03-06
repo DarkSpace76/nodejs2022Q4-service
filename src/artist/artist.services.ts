@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db.service';
 import { AppServiceExtends } from 'src/service.extends';
+import { FavType } from 'src/utils/DB/entities/DBFavorites';
 
 export interface Artist {
     id: string; // uuid v4
@@ -32,19 +33,15 @@ export class ArtistService extends AppServiceExtends<Artist, CreateArtistDTO, Ch
         return this.database.artists.change(id, dto);
     }
     async delete(id: string): Promise<Artist> {
-        const artist = await this.database.artists.delete(id);
-        console.log(artist);
+        const deleteArtist = await this.database.artists.findById(id);
 
-        if (artist) {
-            await this.database.tracks.deleteArtist(artist.id);
-            console.log('delete track artist ');
-
-            await this.database.albums.deleteArtist(artist.id);
-            console.log('delete album artist ');
-            await this.database.favorites.deleteArtist(artist.id);
-            console.log('delete favs artist ');
+        if (deleteArtist) {
+            await this.database.artists.delete(deleteArtist.id);
+            await this.database.tracks.deleteArtist(deleteArtist.id);
+            await this.database.albums.deleteArtist(deleteArtist.id);
+            await this.database.favorites.delete(deleteArtist.id, FavType.artist);
         }
-        return artist;
+        return deleteArtist;
     }
 
 

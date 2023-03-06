@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatusCodes } from 'http-status-codes';
 import { DbService } from 'src/db.service';
-import { ResponseFavorites } from 'src/utils/DB/entities/DBFavorites';
+import { FavType } from 'src/utils/DB/entities/DBFavorites';
 import FavoritesHelper from 'src/utils/favs.helper';
 import { validate } from 'uuid';
 
@@ -12,7 +12,7 @@ export class FavoritesService {
     constructor(private database: DbService) {
     }
 
-    async getAll(): Promise<ResponseFavorites> {
+    async getAll(): Promise<any> {
         const fav = await this.database.favorites.getAll();
         return {
             artists: await this.database.artists.findMany(fav.artists),
@@ -26,8 +26,8 @@ export class FavoritesService {
         if (!validate(id)) return new FavoritesHelper(StatusCodes.BAD_REQUEST, 'track id not valid');
         if (!await this.database.tracks.findById(id)) return new FavoritesHelper(StatusCodes.UNPROCESSABLE_ENTITY, 'track  not exists');
 
-        if (!await this.database.favorites.findTrack(id)) {
-            await this.database.favorites.addTrack(id);
+        if (!await this.database.favorites.find(id, FavType.track)) {
+            await this.database.favorites.add(id, FavType.track);
             return;
         }
         else
@@ -38,8 +38,8 @@ export class FavoritesService {
 
         if (!validate(id)) return new FavoritesHelper(StatusCodes.BAD_REQUEST, 'track id not valid');
 
-        if (await this.database.favorites.findTrack(id)) {
-            await this.database.favorites.deleteTrack(id);
+        if (await this.database.favorites.find(id, FavType.track)) {
+            await this.database.favorites.delete(id, FavType.track);
             return;
         }
         else
@@ -51,8 +51,8 @@ export class FavoritesService {
         if (!validate(id)) return new FavoritesHelper(StatusCodes.BAD_REQUEST, 'album id not valid');
         if (!await this.database.albums.findById(id)) return new FavoritesHelper(StatusCodes.UNPROCESSABLE_ENTITY, 'album  not exists');
 
-        if (!await this.database.favorites.findAlbum(id)) {
-            await this.database.favorites.addAlbum(id);
+        if (!await this.database.favorites.find(id, FavType.album)) {
+            await this.database.favorites.add(id, FavType.album);
             return;
         }
         else
@@ -63,8 +63,8 @@ export class FavoritesService {
 
         if (!validate(id)) return new FavoritesHelper(StatusCodes.BAD_REQUEST, 'album id not valid');
 
-        if (await this.database.favorites.findAlbum(id)) {
-            await this.database.favorites.deleteAlbum(id);
+        if (await this.database.favorites.find(id, FavType.album)) {
+            await this.database.favorites.delete(id, FavType.album);
             return;
         }
         else
@@ -76,8 +76,8 @@ export class FavoritesService {
         if (!validate(id)) return new FavoritesHelper(StatusCodes.BAD_REQUEST, 'artists id not valid');
         if (!await this.database.artists.findById(id)) return new FavoritesHelper(StatusCodes.UNPROCESSABLE_ENTITY, 'artists  not exists');
 
-        if (!await this.database.favorites.findArtist(id)) {
-            await this.database.favorites.addArtist(id);
+        if (!await this.database.favorites.find(id, FavType.artist)) {
+            await this.database.favorites.add(id, FavType.artist);
             return;
         }
         else
@@ -88,8 +88,8 @@ export class FavoritesService {
 
         if (!validate(id)) return new FavoritesHelper(StatusCodes.BAD_REQUEST, 'artists id not valid');
 
-        if (await this.database.favorites.findArtist(id)) {
-            await this.database.favorites.deleteArtist(id);
+        if (await this.database.favorites.find(id, FavType.artist)) {
+            await this.database.favorites.delete(id, FavType.artist);
             return;
         }
         else

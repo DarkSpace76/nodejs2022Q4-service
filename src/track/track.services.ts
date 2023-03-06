@@ -2,7 +2,9 @@
 import { Injectable } from '@nestjs/common';
 import { DbService } from 'src/db.service';
 import { AppServiceExtends } from 'src/service.extends';
-import { ChangeTrackDTO, CreateTrackDTO, Track } from 'src/utils/DB/entities/DBTrack';
+import { FavType } from 'src/utils/DB/entities/DBFavorites';
+import { ChangeTrackDTO, CreateTrackDTO } from 'src/utils/DB/entities/DBTrack';
+import { Track } from 'src/utils/typeorm/entity/Track';
 
 
 @Injectable()
@@ -25,11 +27,12 @@ export class TrackService extends AppServiceExtends<Track, CreateTrackDTO, Chang
         return this.database.tracks.change(id, dto);
     }
     async delete(id: string): Promise<Track> {
-        const track = await this.database.tracks.delete(id);
-        if (track)
-            await this.database.favorites.deleteTrack(track.id);
+        const deleteTrack = await this.database.tracks.findById(id);
+        if (deleteTrack)
+            await this.database.tracks.delete(deleteTrack.id);
+        await this.database.favorites.delete(deleteTrack.id, FavType.track);
 
-        return track;
+        return deleteTrack;
     }
 
 
